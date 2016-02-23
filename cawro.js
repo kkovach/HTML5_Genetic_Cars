@@ -518,18 +518,20 @@ function cw_mutatev(car_def, n, xfact, yfact) {
 
 function cw_mutate(car_def) {
 
-  var mutatedWheelCount = cw_mutate1(car_def.wheelCount, wheelsMin, wheelsMax - wheelsMin);
+  var mutatedWheelCount = Math.round(cw_mutate1(car_def.wheelCount, wheelsMin, wheelsMax));
   if(mutatedWheelCount > car_def.wheelCount) {
-    while(car_def.wheelCount != mutatedWheelCount) {
+    while(car_def.wheelCount < mutatedWheelCount) {
       car_def.wheel_radius.push(Math.random()*wheelMaxRadius+wheelMinRadius);
       car_def.wheel_density.push(Math.random()*wheelMaxDensity+wheelMinDensity);
+      car_def.wheel_vertex.push(Math.floor(Math.random()*8)%8);
       car_def.wheelCount++;
     }
-  } else {
-    while(car_def.wheelCount != mutatedWheelCount) {
-      var wheelToRemove = Math.floor((Math.random() * car_def.wheelCount) + 1);
+  } else if(mutatedWheelCount < car_def.wheelCount) {
+    while(car_def.wheelCount > mutatedWheelCount) {
+      var wheelToRemove = Math.floor((Math.random() * (car_def.wheelCount - 1) + 1));
       car_def.wheel_radius.splice(wheelToRemove, 1);
       car_def.wheel_density.splice(wheelToRemove, 1);
+      car_def.wheel_vertex.splice(wheelToRemove, 1);
       car_def.wheelCount--;
     }
   }
